@@ -13,6 +13,8 @@ You need two things a shop domain and an `access_token`. You can read [this doc]
 
 This will iterate over all of your products, one using Page based pagination and other using Cursor based pagination and post some metrics. See image below:
 
+<img src="https://github.com/ignacio-chiazzo/Shopify-Pagination-relative-cursor-vs-page/blob/master/cursor_based_pagination_vs_page_based_pagination.png?raw=true">
+
 
 ### Changing params
 
