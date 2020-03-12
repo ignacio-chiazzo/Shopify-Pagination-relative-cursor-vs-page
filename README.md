@@ -1,6 +1,8 @@
 # Shopify-Pagination-relative-cursor-vs-page
 Compare Shopify REST Admin API using Relative Cursor vs Page based pagination. 
 
+[Shopify Released Cursor-based pagination](https://shopify.dev/tutorials/make-paginated-requests-to-rest-admin-api) in version `2019-07`, this script compares this new approach with the old one (using page based pagination).
+
 ### Prerequisites: 
 You need to install the `shopify_api` gem. You can run in the console `gem install shopify_api`
 
