@@ -57,17 +57,17 @@ class BenchmarkShopifyAPIPagination
 
     def message_for_query(api_version, page)
       if api_version == API_VERSION_USING_CURSOR_RELATIVE
-        "Time to get page #{page} for #{MODEL.name.demodulize} USING CURSOR BASED PAGINATION: "
+        "Time to get page #{page} for #{MODEL.name.demodulize}s USING CURSOR BASED PAGINATION: "
       elsif api_version == API_VERSION_USING_PAGE
-        "Time to get page #{page} for #{MODEL.name.demodulize}  USING PAGE : "
+        "Time to get page #{page} for #{MODEL.name.demodulize}s  USING PAGE : "
       end
     end
 
     def final_message_time(api_version)
       if api_version == API_VERSION_USING_CURSOR_RELATIVE
-        "\e[32m Time to iterate over all #{MODEL.name.demodulize} using CURSOR BASED PAGINATION: \e[0m"
+        "\e[32m Time to iterate over all #{MODEL.name.demodulize}s using CURSOR BASED PAGINATION: \e[0m"
       elsif api_version == API_VERSION_USING_PAGE
-        "\e[31m Time to iterate over all #{MODEL.name.demodulize} using PAGE: \e[0m"
+        "\e[31m Time to iterate over all #{MODEL.name.demodulize}s using PAGE: \e[0m"
       end
     end
 
