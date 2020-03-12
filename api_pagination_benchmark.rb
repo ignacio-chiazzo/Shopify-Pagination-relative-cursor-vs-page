@@ -18,7 +18,7 @@ class BenchmarkShopifyAPIPagination
   API_VERSION_USING_PAGE = '2019-04'
   API_VERSION_USING_CURSOR_RELATIVE = '2019-10'
   LIMIT_PER_PAGE = 50
-  MODEL = ShopifyAPI::Product
+  MODEL = ShopifyAPI::Product # You can change this value to any other class that has an index and a count action such as `ShopifyAPI::Customer, ShopifyAPI::Order, ShopifyAPI::Collect, ShopifyAPI::SmartCollection, ShopifyAPI::CustomCollection`
 
   class << self
     def test_using_page
