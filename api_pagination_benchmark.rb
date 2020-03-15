@@ -17,7 +17,7 @@ module Constants
   ACCESS_TOKEN =  <YOUR-ACCESS-TOKEN> #Put your access token here. You can see the docs to see how can the info here https://github.com/Shopify/shopify_api#3-requesting-access-from-a-shop
   API_VERSION_USING_PAGE = '2019-04'
   API_VERSION_USING_CURSOR_RELATIVE = '2019-10'
-  LIMIT_PER_PAGE = 50
+  LIMIT_PER_PAGE = 100
 end
 
 module BenchmarkPrinter
@@ -37,11 +37,11 @@ Model = Struct.new(:name, :klass)
 class PaginatedModels
   MODELS = [
     Model.new("customers", ShopifyAPI::Customer),
-    Model.new("collects", ShopifyAPI::Collect),
     Model.new("smart_collections", ShopifyAPI::SmartCollection),
     Model.new("custom_collections", ShopifyAPI::CustomCollection),
+    Model.new("collects", ShopifyAPI::Collect),
     Model.new("products", ShopifyAPI::Product),
-    Model.new("order", ShopifyAPI::Order)
+    Model.new("orders", ShopifyAPI::Order)
   ].freeze
 end
 
@@ -54,8 +54,28 @@ class TestPagination
 
   def paginate_and_benchmark
     @models.each do |model|
-      @paged_based_paginate.paginate(model.klass)
-      @cursor_based_paginate.paginate(model.klass)
+      @paged_based_paginate.paginate(model)
+      @cursor_based_paginate.paginate(model)
+    end
+  end
+end
+
+class Color
+  class << self
+    def blue(message)
+      "\e[34m#{message}\e[0m"
+    end
+
+    def red(message)
+      "\e[31m#{message}\e[0m"
+    end
+
+    def green(message)
+      "\e[32m#{message}\e[0m"
+    end
+
+    def bg_gray(message)
+      "\e[47m#{message}\e[0m"
     end
   end
 end
@@ -64,6 +84,11 @@ class Paginate
   extend Constants
   extend BenchmarkPrinter
 
+  def initialize
+    @shopify_session = ShopifyAPI::Session.new(domain: Constants::DOMAIN, token: Constants::ACCESS_TOKEN, api_version: @api_version, extra: nil)
+    @limit = Constants::LIMIT_PER_PAGE
+  end
+
   def paginate
     raise NotImplementedError
   end
@@ -71,11 +96,16 @@ class Paginate
   protected
 
   def benchmark_pagination(model, &block)
+    puts start_message_pagination(model)
     self.class.benchmark_time(final_message_time(model), &block)
   end
 
   def benchmark_page(model, page, &block)
     self.class.benchmark_time(message_querying_page(model, page), &block)
+  end
+
+  def start_message_pagination(model)
+    raise NotImplementedError
   end
 
   def final_message_time(model)
@@ -91,19 +121,19 @@ end
 class PageBasedPaginate < Paginate
   def initialize
     @api_version = Constants::API_VERSION_USING_PAGE
-    @shopify_session = ShopifyAPI::Session.new(domain: Constants::DOMAIN, token: Constants::ACCESS_TOKEN, api_version: @api_version, extra: nil)
-    @limit = Constants::LIMIT_PER_PAGE
+    super
   end
 
   def paginate(model)
     ShopifyAPI::Base.activate_session(@shopify_session)
+    klass = model.klass
 
     page = 1
     benchmark_pagination(model) do
-      records = query_records_using_page(model, page)
+      records = query_records_using_page(klass, page)
       while(records.count == @limit)
         page += 1
-        records = query_records_using_page(model, page)
+        records = query_records_using_page(klass, page)
       end
     end
   end
@@ -111,18 +141,22 @@ class PageBasedPaginate < Paginate
   protected
 
   def message_querying_page(model, page)
-    "Time to get page #{page} for #{model.name.demodulize}s USING PAGE : "
+    "Time to get page #{page} for #{model.name} USING PAGE : "
+  end
+
+  def start_message_pagination(model)
+    Color.blue("Start to Paginating #{Color.bg_gray(model.name)} USING PAGE")
   end
 
   def final_message_time(model)
-    "\e[31m Time to iterate over all #{model}s using PAGE: \e[0m"
+    Color.red("Time to iterate over all #{model.name} using PAGE:")
   end
 
   private
 
-  def query_records_using_page(model, page)
-    benchmark_page(model, page) do
-      model.find(:all, params: { limit: @limit, page: page })
+  def query_records_using_page(klass, page)
+    benchmark_page(klass, page) do
+      klass.find(:all, params: { limit: @limit, page: page })
     end
   end
 end
@@ -130,21 +164,21 @@ end
 class CurosrBasedPaginate < Paginate
   def initialize
     @api_version = Constants::API_VERSION_USING_CURSOR_RELATIVE
-    @shopify_session = ShopifyAPI::Session.new(domain: Constants::DOMAIN, token: Constants::ACCESS_TOKEN, api_version: @api_version, extra: nil)
-    @limit = Constants::LIMIT_PER_PAGE
+    super
   end
 
   def paginate(model)
     ShopifyAPI::Base.activate_session(@shopify_session)
 
     page = 1
-    self.class.benchmark_time(final_message_time(model)) do
-      records = self.class.benchmark_time(message_querying_page(model, page)) do
-        model.find(:all, params: { limit: @limit })
+    klass = model.klass
+    benchmark_pagination(model) do
+      records = benchmark_page(klass, page) do
+        klass.find(:all, params: { limit: @limit })
       end
       while records.next_page?
         page += 1
-        records = self.class.benchmark_time(message_querying_page(model, page)) do
+        records = benchmark_page(klass, page) do
           records.fetch_next_page
         end
       end
@@ -154,11 +188,15 @@ class CurosrBasedPaginate < Paginate
   protected
 
   def message_querying_page(model, page)
-    "Time to get page #{page} for #{model.name.demodulize}s USING CURSOR BASED PAGINATION: "
+    "Time to get page #{page} for #{model.name} USING CURSOR BASED PAGINATION: "
   end
 
   def final_message_time(model)
-    "\e[32m Time to iterate over all #{model}s using CURSOR BASED PAGINATION: \e[0m"
+    Color.green("Time to iterate over all #{model}s using CURSOR BASED PAGINATION:")
+  end
+
+  def start_message_pagination(model)
+    Color.blue("Start to Paginating #{Color.bg_gray(model.name)} USING CURSOR BASED PAGINATION")
   end
 end
 
