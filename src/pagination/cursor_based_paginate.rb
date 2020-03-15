@@ -10,17 +10,15 @@ class CursorBasedPaginate < Paginate
   end
 
   def paginate(model)
-    ShopifyAPI::Base.activate_session(@shopify_session)
-
+    super
     page = 1
-    klass = model.klass
     benchmark_pagination(model) do
-      records = benchmark_page(klass, page) do
-        klass.find(:all, params: { limit: @limit })
+      records = benchmark_page(model, page) do
+        model.klass.find(:all, params: { limit: @limit })
       end
       while records.next_page?
         page += 1
-        records = benchmark_page(klass, page) do
+        records = benchmark_page(model, page) do
           records.fetch_next_page
         end
       end
@@ -34,7 +32,7 @@ class CursorBasedPaginate < Paginate
   end
 
   def final_message_time(model)
-    String.green("---------->  Time to iterate over all #{model.name}s using CURSOR BASED PAGINATION:")
+    String.green("---------->  Time to iterate over all #{model.name} using CURSOR BASED PAGINATION:")
   end
 
   def start_message_pagination(model)
