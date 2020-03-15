@@ -15,13 +15,21 @@ You need two things, a `shop` domain and an `access_token`. You can read [this d
 
 This will iterate over all sets (defined in `PaginatedModels`) twice, one using **Page based pagination** and other using **Cursor based pagination** and post some metrics. See image below:
 
-<img src="https://github.com/ignacio-chiazzo/Shopify-Pagination-relative-cursor-vs-page/blob/master/cursor_based_pagination_vs_page_based_pagination.png?raw=true">
+<img src="https://github.com/ignacio-chiazzo/Shopify-Pagination-relative-cursor-vs-page/blob/master/images/in.gif?raw=true">
+
+### The output
+
+<img src="https://github.com/ignacio-chiazzo/Shopify-Pagination-relative-cursor-vs-page/blob/master/images/Table Metrics.png?raw=true">
+
+<img src="https://github.com/ignacio-chiazzo/Shopify-Pagination-relative-cursor-vs-page/blob/master/images/cursor_based_pagination_vs_page_based_pagination.png?raw=true" height="500">
+
+
 
 ### Changing params
 
-You can play around and change the class variables in the file `src/constants.rb`. If you want to add or modify which resources it will iterate(e.g. `Collection`, or `Order`), you need to modify the file `src/paginated_models.rb`
+You can change the size of the `page` by changing the variable `LIMIT_PER_PAGE` in the file `src/constants.rb`. If you want to add or modify which resources it will iterate(e.g. `Collection`, or `Order`), you need to modify the file `src/paginated_models.rb`
 
 ### Notes
 
-Some of the endpoints are using some kind of cache so trying running the script multiple times might retrieve similar numbers. You can see a big difference in the very first run 
+Some of the endpoints are using some kind of cache so trying to run the script multiple times in a short period of time, might retrieve similar numbers. You can see a big difference in the very first run.
 
