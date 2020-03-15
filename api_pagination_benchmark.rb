@@ -40,8 +40,8 @@ class PaginatedModels
     Model.new("collects", ShopifyAPI::Collect),
     Model.new("smart_collections", ShopifyAPI::SmartCollection),
     Model.new("custom_collections", ShopifyAPI::CustomCollection),
-    products: ShopifyAPI::Product,
-    orders: ShopifyAPI::Order,
+    Model.new("products", ShopifyAPI::Product),
+    Model.new("order", ShopifyAPI::Order)
   ].freeze
 end
 
