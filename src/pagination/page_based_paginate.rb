@@ -1,4 +1,4 @@
-require_relative '../color'
+require_relative '../string'
 require_relative '../constants'
 require_relative '../paginated_models'
 require_relative 'paginate'
@@ -30,11 +30,11 @@ class PageBasedPaginate < Paginate
   end
 
   def start_message_pagination(model)
-    Color.blue("Start to Paginating #{Color.bg_gray(model.name)} USING PAGE")
+    String.blue("Start to Paginate #{String.bg_gray(model.name)} USING PAGE")
   end
 
   def final_message_time(model)
-    Color.red("Time to iterate over all #{model.name} using PAGE:")
+    String.red("----------> Time to iterate over all #{model.name} using PAGE:")
   end
 
   private
