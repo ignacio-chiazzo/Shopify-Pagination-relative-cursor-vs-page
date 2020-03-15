@@ -3,7 +3,6 @@ require_relative '../constants'
 
 class Paginate
   extend Constants
-  extend BenchmarkPrinter
 
   def initialize
     @shopify_session = ShopifyAPI::Session.new(domain: Constants::DOMAIN, token: Constants::ACCESS_TOKEN, api_version: @api_version, extra: nil)
@@ -18,11 +17,11 @@ class Paginate
 
   def benchmark_pagination(model, &block)
     puts start_message_pagination(model)
-    self.class.benchmark_time(final_message_time(model), &block)
+    BenchmarkPrinter.benchmark_time(final_message_time(model), highlight_number:true, &block)
   end
 
   def benchmark_page(model, page, &block)
-    self.class.benchmark_time(message_querying_page(model, page), &block)
+    BenchmarkPrinter.benchmark_time(message_querying_page(model, page), &block)
   end
 
   def start_message_pagination(model)
