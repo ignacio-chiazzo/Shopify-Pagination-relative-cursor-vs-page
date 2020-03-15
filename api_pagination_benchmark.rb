@@ -19,6 +19,8 @@ class TestPagination
       @page_based_paginate.paginate(model)
       @cursor_based_paginate.paginate(model)
     end
+    analyzer = Analyzer.instance
+    analyzer.print_stats
   end
 end
 
