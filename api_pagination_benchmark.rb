@@ -11,6 +11,7 @@
 #
 
 require 'shopify_api'
+
 module Constants
   DOMAIN = <YOUR-SHOP-DOMAIN> # e.g <shop>.myshopify.com
   ACCESS_TOKEN =  <YOUR-ACCESS-TOKEN> #Put your access token here. You can see the docs to see how can the info here https://github.com/Shopify/shopify_api#3-requesting-access-from-a-shop
@@ -27,6 +28,34 @@ module BenchmarkPrinter
     ensure
       duration_ms = (Time.now.utc - time) * 1000
       puts "#{message} #{duration_ms.round(2)} ms \n"
+    end
+  end
+end
+
+Model = Struct.new(:name, :klass)
+
+class PaginatedModels
+  MODELS = [
+    Model.new("customers", ShopifyAPI::Customer),
+    Model.new("collects", ShopifyAPI::Collect),
+    Model.new("smart_collections", ShopifyAPI::SmartCollection),
+    Model.new("custom_collections", ShopifyAPI::CustomCollection),
+    products: ShopifyAPI::Product,
+    orders: ShopifyAPI::Order,
+  ].freeze
+end
+
+class TestPagination
+  def initialize(models: PaginatedModels::MODELS)
+    @models = models
+    @paged_based_paginate = PageBasedPaginate.new
+    @cursor_based_paginate = CurosrBasedPaginate.new
+  end
+
+  def paginate_and_benchmark
+    @models.each do |model|
+      @paged_based_paginate.paginate(model.klass)
+      @cursor_based_paginate.paginate(model.klass)
     end
   end
 end
@@ -133,8 +162,5 @@ class CurosrBasedPaginate < Paginate
   end
 end
 
-paged_based_paginate = PageBasedPaginate.new
-paged_based_paginate.paginate(ShopifyAPI::Product)
-
-cursor_based_paginate = CurosrBasedPaginate.new
-cursor_based_paginate.paginate(ShopifyAPI::Product)
+test_pagination = TestPagination.new
+test_pagination.paginate_and_benchmark
