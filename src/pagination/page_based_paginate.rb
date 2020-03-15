@@ -1,4 +1,4 @@
-require_relative '../string'
+require_relative '../utils/string'
 require_relative '../constants'
 require_relative '../paginated_models'
 require_relative 'paginate'

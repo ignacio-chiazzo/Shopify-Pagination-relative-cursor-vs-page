@@ -1,4 +1,4 @@
-require_relative 'string'
+require_relative '../src/utils/string'
 
 class BenchmarkPrinter
   def self.benchmark_time(message, highlight_number: false,  &block)
