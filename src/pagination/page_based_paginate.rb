@@ -1,4 +1,4 @@
-require_relative '../string'
+require_relative '../utils/string'
 require_relative '../constants'
 require_relative '../paginated_models'
 require_relative 'paginate'
@@ -10,15 +10,14 @@ class PageBasedPaginate < Paginate
   end
 
   def paginate(model)
-    ShopifyAPI::Base.activate_session(@shopify_session)
-    klass = model.klass
+    super
 
     page = 1
     benchmark_pagination(model) do
-      records = query_records_using_page(klass, page)
+      records = query_records_using_page(model, page)
       while(records.count == @limit)
         page += 1
-        records = query_records_using_page(klass, page)
+        records = query_records_using_page(model, page)
       end
     end
   end
@@ -39,9 +38,9 @@ class PageBasedPaginate < Paginate
 
   private
 
-  def query_records_using_page(klass, page)
-    benchmark_page(klass, page) do
-      klass.find(:all, params: { limit: @limit, page: page })
+  def query_records_using_page(model, page)
+    benchmark_page(model, page) do
+      model.klass.find(:all, params: { limit: @limit, page: page })
     end
   end
 end

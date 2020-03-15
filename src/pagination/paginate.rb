@@ -1,5 +1,6 @@
 require_relative '../benchmark_printer'
 require_relative '../constants'
+require_relative '../analyzer/analyzer'
 
 class Paginate
   extend Constants
@@ -9,8 +10,8 @@ class Paginate
     @limit = Constants::LIMIT_PER_PAGE
   end
 
-  def paginate
-    raise NotImplementedError
+  def paginate(model)
+    ShopifyAPI::Base.activate_session(@shopify_session)
   end
 
   protected
@@ -21,7 +22,10 @@ class Paginate
   end
 
   def benchmark_page(model, page, &block)
-    BenchmarkPrinter.benchmark_time(message_querying_page(model, page), &block)
+    result, duration_ms = BenchmarkPrinter.benchmark_time(message_querying_page(model, page), &block)
+    total_current_page = result.size
+    @analizyer = Analyzer.instance.add_metric(model, page, total_current_page, duration_ms, self.class)
+    result
   end
 
   def start_message_pagination(model)
@@ -36,3 +40,4 @@ class Paginate
     raise NotImplementedError
   end
 end
+
