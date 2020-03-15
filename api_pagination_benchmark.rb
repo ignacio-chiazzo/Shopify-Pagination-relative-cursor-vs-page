@@ -41,7 +41,7 @@ class PaginatedModels
     Model.new("custom_collections", ShopifyAPI::CustomCollection),
     Model.new("collects", ShopifyAPI::Collect),
     Model.new("products", ShopifyAPI::Product),
-    Model.new("order", ShopifyAPI::Order)
+    Model.new("orders", ShopifyAPI::Order)
   ].freeze
 end
 
@@ -54,8 +54,8 @@ class TestPagination
 
   def paginate_and_benchmark
     @models.each do |model|
-      @paged_based_paginate.paginate(model.klass)
-      @cursor_based_paginate.paginate(model.klass)
+      @paged_based_paginate.paginate(model)
+      @cursor_based_paginate.paginate(model)
     end
   end
 end
@@ -126,13 +126,14 @@ class PageBasedPaginate < Paginate
 
   def paginate(model)
     ShopifyAPI::Base.activate_session(@shopify_session)
+    klass = model.klass
 
     page = 1
     benchmark_pagination(model) do
-      records = query_records_using_page(model, page)
+      records = query_records_using_page(klass, page)
       while(records.count == @limit)
         page += 1
-        records = query_records_using_page(model, page)
+        records = query_records_using_page(klass, page)
       end
     end
   end
@@ -140,22 +141,22 @@ class PageBasedPaginate < Paginate
   protected
 
   def message_querying_page(model, page)
-    "Time to get page #{page} for #{model.name.demodulize}s USING PAGE : "
+    "Time to get page #{page} for #{model.name} USING PAGE : "
   end
 
   def start_message_pagination(model)
-    Color.blue("Start to Paginating #{Color.bg_gray(model.name.demodulize)}s USING PAGE")
+    Color.blue("Start to Paginating #{Color.bg_gray(model.name)} USING PAGE")
   end
 
   def final_message_time(model)
-    Color.red("Time to iterate over all #{model}s using PAGE:")
+    Color.red("Time to iterate over all #{model.name} using PAGE:")
   end
 
   private
 
-  def query_records_using_page(model, page)
-    benchmark_page(model, page) do
-      model.find(:all, params: { limit: @limit, page: page })
+  def query_records_using_page(klass, page)
+    benchmark_page(klass, page) do
+      klass.find(:all, params: { limit: @limit, page: page })
     end
   end
 end
@@ -170,13 +171,14 @@ class CurosrBasedPaginate < Paginate
     ShopifyAPI::Base.activate_session(@shopify_session)
 
     page = 1
+    klass = model.klass
     benchmark_pagination(model) do
-      records = benchmark_page(model, page) do
-        model.find(:all, params: { limit: @limit })
+      records = benchmark_page(klass, page) do
+        klass.find(:all, params: { limit: @limit })
       end
       while records.next_page?
         page += 1
-        records = benchmark_page(model, page) do
+        records = benchmark_page(klass, page) do
           records.fetch_next_page
         end
       end
@@ -186,7 +188,7 @@ class CurosrBasedPaginate < Paginate
   protected
 
   def message_querying_page(model, page)
-    "Time to get page #{page} for #{model.name.demodulize}s USING CURSOR BASED PAGINATION: "
+    "Time to get page #{page} for #{model.name} USING CURSOR BASED PAGINATION: "
   end
 
   def final_message_time(model)
@@ -194,7 +196,7 @@ class CurosrBasedPaginate < Paginate
   end
 
   def start_message_pagination(model)
-    Color.blue("Start to Paginating #{Color.bg_gray(model.name.demodulize)}s USING CURSOR BASED PAGINATION")
+    Color.blue("Start to Paginating #{Color.bg_gray(model.name)} USING CURSOR BASED PAGINATION")
   end
 end
 
