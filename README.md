@@ -25,7 +25,7 @@ This will iterate over all sets (defined in `PaginatedModels`) twice, one using 
 
 ### The output
 
-<img src="https://github.com/ignacio-chiazzo/Shopify-Pagination-relative-cursor-vs-page/blob/master/images/Table Metrics.png?raw=true">
+<img src="https://github.com/ignacio-chiazzo/Shopify-Pagination-relative-cursor-vs-page/blob/master/images/Table Metricsv2.png?raw=true">
 
 <img src="https://github.com/ignacio-chiazzo/Shopify-Pagination-relative-cursor-vs-page/blob/master/images/cursor_based_pagination_vs_page_based_pagination.png?raw=true" height="500">
 
