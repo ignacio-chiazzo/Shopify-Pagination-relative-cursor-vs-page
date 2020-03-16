@@ -4,4 +4,5 @@ module Constants
   API_VERSION_USING_PAGE = '2019-04'
   API_VERSION_USING_CURSOR_RELATIVE = '2019-10'
   LIMIT_PER_PAGE = 100
+  MAX_PAGE = 100 # Max page to iterate
 end
