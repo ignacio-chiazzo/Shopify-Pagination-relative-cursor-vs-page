@@ -11,11 +11,17 @@ You need two things, a `shop` domain and an `access_token`. You can read [this d
 ### Getting started.
 
 1) Go to the file `src/constants.rb` and modify the variables `DOMAIN` and `ACCESS_TOKEN`.
-2) Then run the file `ruby api_pagination_benchmark.rb`
+2) Then run the file `ruby api_pagination_benchmark.rb`.
+
 
 This will iterate over all sets (defined in `PaginatedModels`) twice, one using **Page based pagination** and other using **Cursor based pagination** and post some metrics. See image below:
 
 <img src="https://github.com/ignacio-chiazzo/Shopify-Pagination-relative-cursor-vs-page/blob/master/images/in.gif?raw=true">
+
+
+**OR you can use the CLI** by running `ruby cli_run.rb`
+
+
 
 ### The output
 
