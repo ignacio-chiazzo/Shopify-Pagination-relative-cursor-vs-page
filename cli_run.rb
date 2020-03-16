@@ -12,8 +12,8 @@ class CLI
       puts String.blue("Enter your access token")
       access_token = gets.chomp
 
-      test_pagination = ::TestPagination.new
-      test_pagination.paginate_and_benchmark(domain, access_token)
+      test_pagination = ::TestPagination.new(domain: domain, access_token: access_token)
+      test_pagination.paginate_and_benchmark
 
       puts 'Do you want to Try it again? (Yes/No)'
       input = gets.chomp&.downcase
