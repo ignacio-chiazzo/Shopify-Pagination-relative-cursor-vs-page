@@ -21,7 +21,7 @@ This will iterate over all sets (defined in `PaginatedModels`) twice, one using 
 
 **OR you can use the CLI** by running `ruby cli_run.rb`
 
-
+<img src="https://github.com/ignacio-chiazzo/Shopify-Pagination-relative-cursor-vs-page/blob/master/images/Final.gif?raw=true">
 
 ### The output
 
