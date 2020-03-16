@@ -15,7 +15,7 @@ class PageBasedPaginate < Paginate
     page = 1
     benchmark_pagination(model) do
       records = query_records_using_page(model, page)
-      while(records.count == @limit)
+      while(records.count == @limit && page < Constants::MAX_PAGE)
         page += 1
         records = query_records_using_page(model, page)
       end

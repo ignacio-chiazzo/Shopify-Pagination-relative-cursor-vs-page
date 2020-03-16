@@ -16,7 +16,7 @@ class CursorBasedPaginate < Paginate
       records = benchmark_page(model, page) do
         model.klass.find(:all, params: { limit: @limit })
       end
-      while records.next_page?
+      while records.next_page? && page < Constants::MAX_PAGE
         page += 1
         records = benchmark_page(model, page) do
           records.fetch_next_page
