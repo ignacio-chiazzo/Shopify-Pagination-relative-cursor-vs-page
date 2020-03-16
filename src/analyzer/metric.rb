@@ -1,5 +1,3 @@
-require 'pry'
-
 class Metric
   def initialize
     @total_pages = 0

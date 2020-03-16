@@ -4,7 +4,7 @@ require_relative '../paginated_models'
 require_relative 'paginate'
 
 class PageBasedPaginate < Paginate
-  def initialize
+  def initialize(domain: , access_token: )
     @api_version = Constants::API_VERSION_USING_PAGE
     super
   end

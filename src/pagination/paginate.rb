@@ -5,8 +5,8 @@ require_relative '../analyzer/analyzer'
 class Paginate
   extend Constants
 
-  def initialize
-    @shopify_session = ShopifyAPI::Session.new(domain: Constants::DOMAIN, token: Constants::ACCESS_TOKEN, api_version: @api_version, extra: nil)
+  def initialize(domain:, access_token:)
+    @shopify_session = ShopifyAPI::Session.new(domain: domain, token: access_token, api_version: @api_version, extra: nil)
     @limit = Constants::LIMIT_PER_PAGE
   end
 

@@ -5,13 +5,13 @@ require_relative 'pagination/cursor_based_paginate'
 require_relative 'pagination/page_based_paginate'
 
 class TestPagination
-  def initialize(models: PaginatedModels::MODELS)
+  def initialize(models: PaginatedModels::MODELS, domain: Constants::DOMAIN, access_token: Constants::ACCESS_TOKEN)
     @models = models
-    @page_based_paginate = PageBasedPaginate.new
-    @cursor_based_paginate = CursorBasedPaginate.new
+    @page_based_paginate = PageBasedPaginate.new(domain: domain, access_token: access_token)
+    @cursor_based_paginate = CursorBasedPaginate.new(domain: domain, access_token: access_token)
   end
 
-  def paginate_and_benchmark(domain = Constants::DOMAIN, access_token = Constants::ACCESS_TOKEN)
+  def paginate_and_benchmark
     @models.each do |model|
       @page_based_paginate.paginate(model)
       @cursor_based_paginate.paginate(model)
