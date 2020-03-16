@@ -25,11 +25,15 @@ class Analyzer
   end
 
   def print_stats
-    headers = ["Model", "Total Pages", "Total Records", "Time iterating using Page", "Time iterating using Cursor Based Pagination"]
+    headers = ["Model", "Total Pages", "Total Records", "Time iterating using Page", "Time iterating using Cursor Based Pagination", "Percentage of Improvement"]
     table = [headers]
     @metrics.keys.each do |key|
       metric = @metrics[key]
-      table << [key, metric.total_pages, metric.total_records, metric.time_itaring_using_page, metric.time_iterating_using_cursor_based_pagination]
+      percentage_of_improvement = "#{metric.percentage_of_improvement}%"
+      table << [
+        key, metric.total_pages, metric.total_records, metric.time_itaring_using_page,
+        metric.time_iterating_using_cursor_based_pagination, percentage_of_improvement
+      ]
     end
     table.to_table
   end
