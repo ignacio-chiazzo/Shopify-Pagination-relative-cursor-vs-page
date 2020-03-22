@@ -20,14 +20,19 @@ class Analyzer
     @metrics[model.name].total_records = (Constants::LIMIT_PER_PAGE * (page - 1)) + total_current_page
 
     if klass == CursorBasedPaginate
-      @metrics[model.name].time_iterating_using_cursor_based_pagination = (@metrics[model.name].time_iterating_using_cursor_based_pagination + duration_ms).round(2)
+      @metrics[model.name].time_iterating_using_cursor_based_pagination =
+        (@metrics[model.name].time_iterating_using_cursor_based_pagination + duration_ms).round(2)
     elsif klass == PageBasedPaginate
-      @metrics[model.name].time_itaring_using_page = (@metrics[model.name].time_itaring_using_page + duration_ms).round(2)
+      @metrics[model.name].time_itaring_using_page =
+        (@metrics[model.name].time_itaring_using_page + duration_ms).round(2)
     end
   end
 
   def print_stats
-    headers = ["Model", "Total Pages", "Total Records", "Time iterating using Page", "Time iterating using Cursor Based Pagination", "Percentage of Improvement"]
+    headers = [
+      'Model', 'Total Pages', 'Total Records', 'Time iterating using Page',
+      'Time iterating using Cursor Based Pagination', 'Percentage of Improvement'
+    ]
     table = [headers]
     @metrics.keys.each do |key|
       metric = @metrics[key]
