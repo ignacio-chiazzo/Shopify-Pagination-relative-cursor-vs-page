@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class String
   class << self
     def blue(message)

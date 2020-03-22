@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require_relative '../utils/string'
 require_relative '../constants'
 require_relative '../paginated_models'
 require_relative 'paginate'
 
 class PageBasedPaginate < Paginate
-  def initialize(domain: , access_token: )
+  def initialize(domain:, access_token:)
     @api_version = Constants::API_VERSION_USING_PAGE
     super
   end
@@ -15,7 +17,7 @@ class PageBasedPaginate < Paginate
     page = 1
     benchmark_pagination(model) do
       records = query_records_using_page(model, page)
-      while(records.count == @limit && page < Constants::MAX_PAGE)
+      while records.count == @limit && page < Constants::MAX_PAGE
         page += 1
         records = query_records_using_page(model, page)
       end
