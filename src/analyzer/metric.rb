@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Metric
   def initialize
     @total_pages = 0

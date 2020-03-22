@@ -1,4 +1,4 @@
-
+# frozen_string_literal: true
 
 require_relative 'paginated_models'
 require_relative 'pagination/cursor_based_paginate'

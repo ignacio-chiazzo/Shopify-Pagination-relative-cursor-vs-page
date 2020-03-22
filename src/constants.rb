@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Constants
   DOMAIN = <YOUR-SHOP-DOMAIN> # e.g <shop>.myshopify.com
   ACCESS_TOKEN =  <YOUR-ACCESS-TOKEN> #Put your access token here. You can see the docs to see how can the info here https://github.com/Shopify/shopify_api#3-requesting-access-from-a-shop

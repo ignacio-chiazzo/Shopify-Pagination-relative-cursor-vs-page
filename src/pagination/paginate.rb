@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../benchmark_printer'
 require_relative '../constants'
 require_relative '../analyzer/analyzer'

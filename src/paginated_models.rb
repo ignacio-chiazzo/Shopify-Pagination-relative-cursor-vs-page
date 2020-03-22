@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'shopify_api'
 
 Model = Struct.new(:name, :klass)
